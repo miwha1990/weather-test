@@ -551,3 +551,13 @@ function bindEvents(): void {
 document.documentElement.dataset.theme = localStorage.getItem('weather-theme') === 'night' ? 'night' : 'day'
 render()
 void detectDefaultCity()
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
+      scope: import.meta.env.BASE_URL,
+    }).catch((error: unknown) => {
+      console.error('Failed to register the service worker.', error)
+    })
+  })
+}
