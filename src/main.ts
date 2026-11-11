@@ -106,7 +106,6 @@ function weatherSummary(data: WeatherData, cityName: string, mode: 'day' | 'week
   const daily = calculateDailyForecast(data, language, t('todayLabel'))
   const tempText = mode === 'day' ? `${currentTemp}°` : `${Math.round(daily[0]?.temp ?? currentTemp)}°`
   const animation = animationForWeather(weather?.main, weather?.icon)
-  console.log('Weather summary:', { cityName, mode, tempText, animation })
   return `
     <div class="weather-summary">
       <div class="weather-main">
@@ -168,7 +167,11 @@ function renderChart(key: string, data: WeatherData, mode: 'day' | 'week'): void
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => context.parsed.y === null ? '' : ` ${Math.round(context.parsed.y)}°C` } } },
       scales: {
         x: { grid: { display: false }, border: { display: false }, ticks: { color: '#818895', maxTicksLimit: isDay ? 7 : 5 } },
-        y: { grid: { color: 'rgba(128, 138, 150, .13)' }, border: { display: false }, ticks: { color: '#818895', callback: (value) => `${value}°` } },
+        y: {
+          grid: { color: 'rgba(128, 138, 150, .13)' },
+          border: { display: false },
+          ticks: { color: '#818895', callback: (value) => `${typeof value === 'number' ? Math.round(value) : value}°` },
+        },
       },
     },
   }))
